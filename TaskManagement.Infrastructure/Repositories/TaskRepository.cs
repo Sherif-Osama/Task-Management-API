@@ -16,7 +16,7 @@ namespace TaskManagement.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<TaskItem?> CreateAsync(TaskItem task)
+        public async Task<TaskItem> CreateAsync(TaskItem task)
         {
             await _context.Tasks.AddAsync(task);
 
@@ -27,7 +27,7 @@ namespace TaskManagement.Infrastructure.Repositories
 
         public async Task<TaskItem?> GetByIdAsync(int id)
         {
-            return await _context.Tasks.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+            return await _context.Tasks.AsNoTracking().Include(t => t.Project).FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task UpdateAsync(TaskItem task)
@@ -46,7 +46,7 @@ namespace TaskManagement.Infrastructure.Repositories
 
         public async Task<(IEnumerable<TaskItem> Items, int TotalCount)> GetByProjectIdAsync(int projectId, TaskQueryParameters parameters)
         {
-            var query = _context.Tasks.AsNoTracking().Where(t => t.ProjectId == projectId);
+            var query = _context.Tasks.AsNoTracking().Include(t => t.Project).Where(t => t.ProjectId == projectId);
 
             query = Filter(query, parameters);
 
@@ -54,7 +54,7 @@ namespace TaskManagement.Infrastructure.Repositories
 
             query = Sort(query, parameters);
 
-            query = Pagination(query, parameters.Page, parameters.Limit);
+            query = Paginate(query, parameters.Page, parameters.Limit);
 
             var items = await query.ToListAsync();
 
@@ -67,21 +67,22 @@ namespace TaskManagement.Infrastructure.Repositories
 
             query = Filter(query, parameters);
 
-            query = search(query, parameters.Q);
+            query = Search(query, parameters.Q);
 
             var totalCount = await query.CountAsync();
 
             query = Sort(query, parameters);
 
-            query = Pagination(query, parameters.Page, parameters.Limit);
+            query = Paginate(query, parameters.Page, parameters.Limit);
 
             var items = await query.ToListAsync();
 
             return (items, totalCount);
         }
 
-        #region Filtering & Sorting &  Pagination & search Method
-        private IQueryable<TaskItem> Filter(IQueryable<TaskItem> query, TaskQueryParameters parameters)
+        #region Filtering, Sorting, Pagination & Search
+
+        private static IQueryable<TaskItem> Filter(IQueryable<TaskItem> query, TaskQueryParameters parameters)
         {
             if (parameters.Status.HasValue)
             {
@@ -108,45 +109,43 @@ namespace TaskManagement.Infrastructure.Repositories
             return query;
         }
 
-        private IQueryable<TaskItem> Sort(IQueryable<TaskItem> query, TaskQueryParameters parameters)
+        private static IQueryable<TaskItem> Sort(IQueryable<TaskItem> query, TaskQueryParameters parameters)
         {
-            if (parameters.SortBy == TaskSortBy.DueDate)
+            return parameters.SortBy switch
             {
-                query = parameters.SortDirection == SortDirection.Desc ? query.OrderByDescending(t => t.DueDate) : query.OrderBy(t => t.DueDate);
-            }
-            else if (parameters.SortBy == TaskSortBy.Priority)
-            {
-                query = parameters.SortDirection == SortDirection.Desc ? query.OrderByDescending(t => t.Priority) : query.OrderBy(t => t.Priority);
-            }
-            else if (parameters.SortBy == TaskSortBy.CreatedAt)
-            {
-                query = parameters.SortDirection == SortDirection.Desc ? query.OrderByDescending(t => t.CreatedAt) : query.OrderBy(t => t.CreatedAt);
-            }
-            else
-            {
-                //default sorting
-                query = query.OrderByDescending(t => t.CreatedAt);
-            }
+                TaskSortBy.DueDate => parameters.SortDirection == SortDirection.Desc
+                    ? query.OrderByDescending(t => t.DueDate)
+                    : query.OrderBy(t => t.DueDate),
 
-            return query;
+                TaskSortBy.Priority => parameters.SortDirection == SortDirection.Desc
+                    ? query.OrderByDescending(t => t.Priority)
+                    : query.OrderBy(t => t.Priority),
+
+                TaskSortBy.CreatedAt => parameters.SortDirection == SortDirection.Desc
+                    ? query.OrderByDescending(t => t.CreatedAt)
+                    : query.OrderBy(t => t.CreatedAt),
+
+                _ => query.OrderByDescending(t => t.CreatedAt)
+            };
         }
 
-        private IQueryable<TaskItem> Pagination(IQueryable<TaskItem> query, int Page, int Limit)
+        private static IQueryable<TaskItem> Paginate(IQueryable<TaskItem> query, int page, int limit)
         {
-            return query.Skip((Page - 1) * Limit).Take(Limit);
+            return query.Skip((page - 1) * limit).Take(limit);
         }
 
-        private IQueryable<TaskItem> search(IQueryable<TaskItem> query, string? searchString)
+        private static IQueryable<TaskItem> Search(IQueryable<TaskItem> query, string? searchString)
         {
-            if (!string.IsNullOrWhiteSpace(searchString))
+            if (string.IsNullOrWhiteSpace(searchString))
             {
-                var searchQ = searchString.Trim();
-
-                query = query.Where(t => t.Title.Contains(searchQ) || (t.Description != null && t.Description.Contains(searchQ)));
+                return query;
             }
 
-            return query;
+            var trimmedSearch = searchString.Trim();
+
+            return query.Where(t => t.Title.Contains(trimmedSearch) || (t.Description != null && t.Description.Contains(trimmedSearch)));
         }
+
         #endregion
     }
 }

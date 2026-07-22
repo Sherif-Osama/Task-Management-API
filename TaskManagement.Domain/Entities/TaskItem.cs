@@ -22,6 +22,6 @@ namespace TaskManagement.Domain.Entities
 
         public DateTime UpdatedAt { get; set; }
 
-        public required Project Project { get; set; }
+        public Project Project { get; set; } = null!;
     }
 }

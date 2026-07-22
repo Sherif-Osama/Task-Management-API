@@ -5,7 +5,7 @@ namespace TaskManagement.Application.Interfaces.Repositories
 {
     public interface ITaskRepository
     {
-        Task<TaskItem?> CreateAsync(TaskItem task);
+        Task<TaskItem> CreateAsync(TaskItem task);
 
         Task<TaskItem?> GetByIdAsync(int id);
 

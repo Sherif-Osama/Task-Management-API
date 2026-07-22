@@ -10,7 +10,7 @@
 ### Tasks Module
 - [x] Task DTOs
 - [x] Task Repository
-- [ ] Task Service
+- [x] Task Service
 - [ ] Tasks Controller
 
 ### Additional Features

@@ -8,7 +8,7 @@ namespace TaskManagement.Application.DTOs.Responses.Tasks
 
         public int ProjectId { get; set; }
 
-        public string ProjectName { get; set; } = string.Empty;
+        public required string ProjectName { get; set; }
 
         public string Title { get; set; } = string.Empty;
 
