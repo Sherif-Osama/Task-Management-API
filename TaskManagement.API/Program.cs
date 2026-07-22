@@ -1,4 +1,4 @@
-
+using TaskManagement.Infrastructure;
 namespace TaskManagement.API
 {
     public class Program
@@ -7,6 +7,7 @@ namespace TaskManagement.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddInfrastructure(builder.Configuration);
             // Add services to the container.
 
             builder.Services.AddControllers();
