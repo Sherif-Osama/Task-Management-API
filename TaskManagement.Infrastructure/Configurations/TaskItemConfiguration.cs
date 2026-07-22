@@ -23,6 +23,14 @@ namespace TaskManagement.Infrastructure.Configurations
             builder.Property(t => t.CreatedAt).IsRequired();
 
             builder.Property(t => t.UpdatedAt).IsRequired();
+
+            builder.HasIndex(t => t.Status);
+
+            builder.HasIndex(t => t.Priority);
+
+            builder.HasIndex(t => t.DueDate);
+
+            builder.HasIndex(t => new { t.ProjectId, t.Status });
         }
     }
 }
