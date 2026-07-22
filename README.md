@@ -8,7 +8,7 @@
 - [x] CRUD Operations
 
 ### Tasks Module
-- [ ] Task DTOs
+- [x] Task DTOs
 - [ ] Task Repository
 - [ ] Task Service
 - [ ] Tasks Controller
