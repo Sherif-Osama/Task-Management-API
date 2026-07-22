@@ -19,6 +19,10 @@ namespace TaskManagement.Infrastructure.Configurations
             builder.Property(t => t.Priority).IsRequired();
 
             builder.HasOne(t => t.Project).WithMany(p => p.Tasks).HasForeignKey(t => t.ProjectId).OnDelete(DeleteBehavior.Cascade);
+
+            builder.Property(t => t.CreatedAt).IsRequired();
+
+            builder.Property(t => t.UpdatedAt).IsRequired();
         }
     }
 }

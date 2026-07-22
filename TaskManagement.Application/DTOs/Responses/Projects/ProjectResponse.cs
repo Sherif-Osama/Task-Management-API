@@ -1,4 +1,4 @@
-﻿namespace TaskManagement.Application.DTOs.Responses
+﻿namespace TaskManagement.Application.DTOs.Responses.Projects
 {
     public class ProjectResponse
     {

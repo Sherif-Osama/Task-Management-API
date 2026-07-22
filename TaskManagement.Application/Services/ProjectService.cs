@@ -1,5 +1,5 @@
-﻿using TaskManagement.Application.DTOs.Requests;
-using TaskManagement.Application.DTOs.Responses;
+﻿using TaskManagement.Application.DTOs.Requests.Projects;
+using TaskManagement.Application.DTOs.Responses.Projects;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Interfaces.Repositories;
 using TaskManagement.Application.Interfaces.Services;
@@ -95,8 +95,8 @@ namespace TaskManagement.Application.Services
             {
                 Name = name,
                 Description = description,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
                 Tasks = new List<TaskItem>()
             };
 
@@ -122,7 +122,7 @@ namespace TaskManagement.Application.Services
             }
 
             existingProject.Description = description;
-            existingProject.UpdatedAt = DateTime.UtcNow;
+            existingProject.UpdatedAt = DateTime.Now;
 
             await _projectRepository.UpdateAsync(existingProject);
 

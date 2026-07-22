@@ -15,6 +15,10 @@ namespace TaskManagement.Infrastructure.Configurations
             builder.HasIndex(p => p.Name).IsUnique();
 
             builder.Property(p => p.Description).HasMaxLength(1000);
+
+            builder.Property(p => p.CreatedAt).IsRequired();
+
+            builder.Property(p => p.UpdatedAt).IsRequired();
         }
     }
 }

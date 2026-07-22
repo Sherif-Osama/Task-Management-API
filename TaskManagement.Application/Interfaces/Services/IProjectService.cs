@@ -1,5 +1,5 @@
-﻿using TaskManagement.Application.DTOs.Requests;
-using TaskManagement.Application.DTOs.Responses;
+﻿using TaskManagement.Application.DTOs.Requests.Projects;
+using TaskManagement.Application.DTOs.Responses.Projects;
 
 namespace TaskManagement.Application.Interfaces.Services
 {

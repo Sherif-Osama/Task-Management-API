@@ -1,6 +1,6 @@
-﻿namespace TaskManagement.Application.DTOs.Requests
+﻿namespace TaskManagement.Application.DTOs.Requests.Projects
 {
-    public class UpdateProjectRequest
+    public class CreateProjectRequest
     {
         public required string Name { get; set; }
 
