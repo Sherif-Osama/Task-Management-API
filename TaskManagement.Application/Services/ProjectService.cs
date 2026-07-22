@@ -1,4 +1,5 @@
 ﻿using TaskManagement.Application.DTOs.Requests.Projects;
+using TaskManagement.Application.DTOs.Responses;
 using TaskManagement.Application.DTOs.Responses.Projects;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Interfaces.Repositories;
@@ -79,6 +80,18 @@ namespace TaskManagement.Application.Services
             if (await _projectRepository.ExistsByNameAsync(name))
                 throw new ConflictException($"A project with the name '{name}' already exists.");
         }
+
+        private static void ValidatePagination(int page, int limit)
+        {
+            if (page <= 0)
+                throw new ValidationException("Page must be greater than zero.");
+
+            if (limit <= 0)
+                throw new ValidationException("Limit must be greater than zero.");
+
+            if (limit > 100)
+                throw new ValidationException("Limit cannot exceed 100.");
+        }
         #endregion
 
         #region Public Methods
@@ -147,11 +160,17 @@ namespace TaskManagement.Application.Services
             return MapToResponse(project);
         }
 
-        public async Task<IEnumerable<ProjectResponse>> GetAllAsync()
+        public async Task<PagedResponse<ProjectResponse>> GetAllAsync(int page, int limit)
         {
-            var projects = await _projectRepository.GetAllAsync();
+            ValidatePagination(page, limit);
 
-            return projects.Select(MapToResponse);
+            var result = await _projectRepository.GetAllAsync(page, limit);
+
+            return new PagedResponse<ProjectResponse>
+            {
+                Items = result.Items.Select(MapToResponse),
+                TotalCount = result.TotalCount
+            };
         }
 
         public async Task<bool> IsProjectExistAsync(int projectId)

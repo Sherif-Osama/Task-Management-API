@@ -23,9 +23,15 @@ namespace TaskManagement.Infrastructure.Repositories
             return project;
         }
 
-        public async Task<IEnumerable<Project>> GetAllAsync()
+        public async Task<(IEnumerable<Project> Items, int TotalCount)> GetAllAsync(int page, int limit)
         {
-            return await _context.Projects.AsNoTracking().ToListAsync();
+            var query = _context.Projects.AsNoTracking().OrderByDescending(p => p.CreatedAt);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query.Skip((page - 1) * limit).Take(limit).ToListAsync();
+
+            return (items, totalCount);
         }
 
         public async Task<Project?> GetByIdAsync(int id)

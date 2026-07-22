@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.DTOs.Requests.Projects;
+using TaskManagement.Application.DTOs.Responses;
 using TaskManagement.Application.DTOs.Responses.Projects;
 using TaskManagement.Application.Interfaces.Services;
 namespace TaskManagement.API.Controllers
@@ -27,12 +28,13 @@ namespace TaskManagement.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ProjectResponse>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<ProjectResponse>>> GetAll()
+        [ProducesResponseType(typeof(PagedResponse<ProjectResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PagedResponse<ProjectResponse>>> GetAll([FromQuery] int page = 1, [FromQuery] int limit = 10)
         {
-            var projects = await _projectService.GetAllAsync();
+            var result = await _projectService.GetAllAsync(page, limit);
 
-            return Ok(projects);
+            return Ok(result);
         }
 
         [HttpGet("{id:int}")]
