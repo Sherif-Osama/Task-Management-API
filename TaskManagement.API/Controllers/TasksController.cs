@@ -33,7 +33,7 @@ namespace TaskManagement.API.Controllers
         [ProducesResponseType(typeof(PagedResponse<TaskListResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PagedResponse<TaskListResponse>>> GetByProjectId(int projectId, TaskQueryParameters parameters)
+        public async Task<ActionResult<PagedResponse<TaskListResponse>>> GetByProjectId(int projectId, [FromQuery] TaskQueryParameters parameters)
         {
             var result = await _taskService.GetByProjectIdAsync(projectId, parameters);
 
@@ -43,7 +43,7 @@ namespace TaskManagement.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(PagedResponse<TaskListResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PagedResponse<TaskListResponse>>> GetAll(TaskQueryParameters parameters)
+        public async Task<ActionResult<PagedResponse<TaskListResponse>>> GetAll([FromQuery] TaskQueryParameters parameters)
         {
             var result = await _taskService.GetAllAsync(parameters);
 
