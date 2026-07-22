@@ -1,6 +1,6 @@
-﻿namespace TaskManagement.Domain.Entities
+﻿namespace TaskManagement.Application.DTOs.Responses
 {
-    public class Project
+    public class ProjectResponse
     {
         public int Id { get; set; }
 
@@ -11,7 +11,5 @@
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
-
-        public required ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
     }
 }

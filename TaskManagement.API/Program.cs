@@ -1,3 +1,5 @@
+using TaskManagement.API.Middlewares;
+using TaskManagement.Application;
 using TaskManagement.Infrastructure;
 namespace TaskManagement.API
 {
@@ -6,10 +8,9 @@ namespace TaskManagement.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            builder.Services.AddInfrastructure(builder.Configuration);
             // Add services to the container.
-
+            builder.Services.AddApplication();
+            builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -17,6 +18,7 @@ namespace TaskManagement.API
 
             var app = builder.Build();
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
