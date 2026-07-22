@@ -15,10 +15,10 @@
 
 ### Additional Features
 - [ ] Validation
-- [ ] Pagination
-- [ ] Filtering
-- [ ] Sorting
-- [ ] Search
+- [x] Pagination
+- [x] Filtering
+- [x] Sorting
+- [x] Search
 
 ### Testing
 - [ ] Unit Tests / Integration Tests

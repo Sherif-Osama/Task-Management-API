@@ -1,4 +1,5 @@
-﻿using TaskManagement.Domain.Entities;
+﻿using TaskManagement.Application.DTOs.Queries;
+using TaskManagement.Domain.Entities;
 
 namespace TaskManagement.Application.Interfaces.Repositories
 {
@@ -12,6 +13,8 @@ namespace TaskManagement.Application.Interfaces.Repositories
 
         Task DeleteAsync(TaskItem task);
 
-        // TODO: Add task listing with pagination, filtering, sorting, and search.
+        Task<(IEnumerable<TaskItem> Items, int TotalCount)> GetByProjectIdAsync(int projectId, TaskQueryParameters query);
+
+        Task<(IEnumerable<TaskItem> Items, int TotalCount)> GetAllAsync(TaskQueryParameters query);
     }
 }
