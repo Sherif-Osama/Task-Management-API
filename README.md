@@ -11,7 +11,7 @@
 - [x] Task DTOs
 - [x] Task Repository
 - [x] Task Service
-- [ ] Tasks Controller
+- [x] Tasks Controller
 
 ### Additional Features
 - [ ] Validation

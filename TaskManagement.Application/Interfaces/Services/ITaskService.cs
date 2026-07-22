@@ -5,7 +5,7 @@ using TaskManagement.Application.DTOs.Responses.Tasks;
 
 namespace TaskManagement.Application.Interfaces.Services
 {
-    internal interface ITaskService
+    public interface ITaskService
     {
         Task<TaskResponse> CreateAsync(int projectId, CreateTaskRequest request);
 
