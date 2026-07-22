@@ -61,8 +61,7 @@ namespace TaskManagement.Infrastructure.Repositories
 
         public async Task<bool> ExistsByIdAsync(int projectId)
         {
-            return await _context.Projects
-                .AnyAsync(p => p.Id == projectId);
+            return await _context.Projects.AnyAsync(p => p.Id == projectId);
         }
     }
 }
