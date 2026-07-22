@@ -18,12 +18,35 @@ namespace TaskManagement.API.Controllers
             _taskService = taskService;
         }
 
+        [HttpPost("/api/projects/{projectId:int}/tasks")]
+        [ProducesResponseType(typeof(TaskResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<TaskResponse>> Create(int projectId, CreateTaskRequest request)
+        {
+            var created = await _taskService.CreateAsync(projectId, request);
+
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+
+        [HttpGet("/api/projects/{projectId:int}/tasks")]
+        [ProducesResponseType(typeof(PagedResponse<TaskListResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<PagedResponse<TaskListResponse>>> GetByProjectId(int projectId, TaskQueryParameters parameters)
+        {
+            var result = await _taskService.GetByProjectIdAsync(projectId, parameters);
+
+            return Ok(result);
+        }
+
         [HttpGet]
         [ProducesResponseType(typeof(PagedResponse<TaskListResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PagedResponse<TaskListResponse>>> GetAllAsync(TaskQueryParameters parameters)
+        public async Task<ActionResult<PagedResponse<TaskListResponse>>> GetAll(TaskQueryParameters parameters)
         {
             var result = await _taskService.GetAllAsync(parameters);
+
             return Ok(result);
         }
 
@@ -31,7 +54,7 @@ namespace TaskManagement.API.Controllers
         [ProducesResponseType(typeof(TaskResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TaskResponse>> GetByIdAsync(int id)
+        public async Task<ActionResult<TaskResponse>> GetById(int id)
         {
             var task = await _taskService.GetByIdAsync(id);
 
@@ -42,7 +65,7 @@ namespace TaskManagement.API.Controllers
         [ProducesResponseType(typeof(TaskResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TaskResponse>> UpdateAsync(int id, UpdateTaskRequest request)
+        public async Task<ActionResult<TaskResponse>> Update(int id, UpdateTaskRequest request)
         {
             var updated = await _taskService.UpdateAsync(id, request);
 
@@ -53,7 +76,7 @@ namespace TaskManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             await _taskService.DeleteAsync(id);
 
