@@ -20,8 +20,9 @@
 - [x] Sorting
 - [x] Search
 
-### Testing
-- [ ] Unit Tests / Integration Tests
+### ✅ Testing
+- [x] Unit Tests
+- [ ] Integration Tests
 
 ### Documentation
 - [ ] Complete README
