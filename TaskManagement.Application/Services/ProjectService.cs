@@ -173,13 +173,6 @@ namespace TaskManagement.Application.Services
             };
         }
 
-        public async Task<bool> IsProjectExistAsync(int projectId)
-        {
-            ValidateProjectId(projectId);
-
-            return await _projectRepository.ExistsByIdAsync(projectId);
-        }
-
         #endregion
 
         //Just for mapping to Project Response DTO

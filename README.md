@@ -22,7 +22,7 @@
 
 ### ✅ Testing
 - [x] Unit Tests
-- [ ] Integration Tests
+- [x] Integration Tests
 
 ### Documentation
 - [ ] Complete README

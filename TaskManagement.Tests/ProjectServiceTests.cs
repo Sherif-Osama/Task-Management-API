@@ -262,27 +262,6 @@ namespace TaskManagement.Tests.Services
             Assert.Equal(1, result.TotalCount);
             Assert.Equal("Existing Project", result.Items.First().Name);
         }
-
-        #endregion
-
-        #region IsProjectExistAsync
-
-        [Fact]
-        public async Task IsProjectExistAsync_InvalidId_ThrowsValidationException()
-        {
-            await Assert.ThrowsAsync<ValidationException>(() => _project.IsProjectExistAsync(0));
-        }
-
-        [Fact]
-        public async Task IsProjectExistAsync_ProjectExists_ReturnsTrue()
-        {
-            _projectRepositoryMock.Setup(r => r.ExistsByIdAsync(1)).ReturnsAsync(true);
-
-            var result = await _project.IsProjectExistAsync(1);
-
-            Assert.True(result);
-        }
-
         #endregion
     }
 }

@@ -10,7 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Integration\CriticalFlowsIntegrationTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.29" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.29" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.5.3" />
@@ -18,7 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TaskManagement.API\TaskManagement.API.csproj" />
     <ProjectReference Include="..\TaskManagement.Application\TaskManagement.Application.csproj" />
+    <ProjectReference Include="..\TaskManagement.Infrastructure\TaskManagement.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
