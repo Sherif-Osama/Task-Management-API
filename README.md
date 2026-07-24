@@ -68,11 +68,24 @@ flowchart TB
 
 ## Setup Instructions
 
+All commands below are run from a regular terminal — cmd, PowerShell, or a bash shell (Terminal.app, Git Bash, WSL, etc.), **not** Visual Studio's Package Manager Console. Run them from the repository root (the folder containing `TaskManagement.slnx`), one after another, in order.
+
 ### Prerequisites
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - SQL Server (LocalDB, a full instance, or a Docker container)
-- (Optional) [EF Core CLI tools](https://learn.microsoft.com/ef/core/cli/dotnet): `dotnet tool install --global dotnet-ef`
+- [EF Core CLI tools](https://learn.microsoft.com/ef/core/cli/dotnet) — required to run migrations:
+  ```bash
+  dotnet tool install --global dotnet-ef
+  ```
+  If it's already installed but the command isn't recognized, update it instead:
+  ```bash
+  dotnet tool update --global dotnet-ef
+  ```
+  Verify it's working before continuing:
+  ```bash
+  dotnet ef --version
+  ```
 
 ### 1. Clone the repository
 
