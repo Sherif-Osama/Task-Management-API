@@ -24,5 +24,6 @@
 - [x] Unit Tests
 - [x] Integration Tests
 
-### Documentation
-- [ ] Complete README
+### ✅ Documentation
+- [x] Complete README
+- [x] README Ready for Upload
