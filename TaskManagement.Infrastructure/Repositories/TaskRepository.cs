@@ -4,45 +4,21 @@ using TaskManagement.Application.Enums;
 using TaskManagement.Application.Interfaces.Repositories;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infrastructure.Data;
+using TaskManagement.Infrastructure.Repositories.Common;
 
 namespace TaskManagement.Infrastructure.Repositories
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository : BaseRepository<TaskItem>, ITaskRepository
     {
-        private readonly AppDbContext _context;
+        public TaskRepository(AppDbContext context) : base(context) { }
 
-        public TaskRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        public Task<TaskItem> CreateAsync(TaskItem task) => AddEntityAsync(task);
+        public Task UpdateAsync(TaskItem task) => UpdateEntityAsync(task);
 
-        public async Task<TaskItem> CreateAsync(TaskItem task)
-        {
-            await _context.Tasks.AddAsync(task);
+        public Task DeleteAsync(TaskItem task) => DeleteEntityAsync(task);
 
-            await _context.SaveChangesAsync();
+        public Task<TaskItem?> GetByIdAsync(int id) => GetEntityByIdAsync(t => t.Id == id, t => t.Project);
 
-            return task;
-        }
-
-        public async Task<TaskItem?> GetByIdAsync(int id)
-        {
-            return await _context.Tasks.AsNoTracking().Include(t => t.Project).FirstOrDefaultAsync(t => t.Id == id);
-        }
-
-        public async Task UpdateAsync(TaskItem task)
-        {
-            _context.Tasks.Update(task);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(TaskItem task)
-        {
-            _context.Tasks.Remove(task);
-
-            await _context.SaveChangesAsync();
-        }
 
         public async Task<(IEnumerable<TaskItem> Items, int TotalCount)> GetByProjectIdAsync(int projectId, TaskQueryParameters parameters)
         {
@@ -73,9 +49,7 @@ namespace TaskManagement.Infrastructure.Repositories
 
             query = Sort(query, parameters);
 
-            query = Paginate(query, parameters.Page, parameters.Limit);
-
-            var items = await query.ToListAsync();
+            var items = await Paginate(query, parameters.Page, parameters.Limit).ToListAsync();
 
             return (items, totalCount);
         }
@@ -127,11 +101,6 @@ namespace TaskManagement.Infrastructure.Repositories
 
                 _ => query.OrderByDescending(t => t.CreatedAt)
             };
-        }
-
-        private static IQueryable<TaskItem> Paginate(IQueryable<TaskItem> query, int page, int limit)
-        {
-            return query.Skip((page - 1) * limit).Take(limit);
         }
 
         private static IQueryable<TaskItem> Search(IQueryable<TaskItem> query, string? searchString)

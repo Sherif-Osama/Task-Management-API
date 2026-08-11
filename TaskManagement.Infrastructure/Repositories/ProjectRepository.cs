@@ -2,26 +2,22 @@
 using TaskManagement.Application.Interfaces.Repositories;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infrastructure.Data;
+using TaskManagement.Infrastructure.Repositories.Common;
 
 namespace TaskManagement.Infrastructure.Repositories
 {
-    public class ProjectRepository : IProjectRepository
+    public class ProjectRepository : BaseRepository<Project>, IProjectRepository
     {
-        private readonly AppDbContext _context;
 
-        public ProjectRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        public ProjectRepository(AppDbContext context) : base(context) { }
 
-        public async Task<Project> CreateAsync(Project project)
-        {
-            await _context.Projects.AddAsync(project);
+        public Task<Project> CreateAsync(Project project) => AddEntityAsync(project);
 
-            await _context.SaveChangesAsync();
+        public Task UpdateAsync(Project project) => UpdateEntityAsync(project);
 
-            return project;
-        }
+        public Task DeleteAsync(Project project) => DeleteEntityAsync(project);
+
+        public Task<Project?> GetByIdAsync(int id) => GetEntityByIdAsync(p => p.Id == id);
 
         public async Task<(IEnumerable<Project> Items, int TotalCount)> GetAllAsync(int page, int limit)
         {
@@ -29,39 +25,15 @@ namespace TaskManagement.Infrastructure.Repositories
 
             var totalCount = await query.CountAsync();
 
-            var items = await query.Skip((page - 1) * limit).Take(limit).ToListAsync();
+            var items = await Paginate(query, page, limit).ToListAsync();
 
             return (items, totalCount);
-        }
-
-        public async Task<Project?> GetByIdAsync(int id)
-        {
-            return await _context.Projects.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-        }
-
-        public async Task UpdateAsync(Project project)
-        {
-            _context.Projects.Update(project);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(Project project)
-        {
-            _context.Projects.Remove(project);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsByNameAsync(string name)
         {
             return await _context.Projects
                 .AnyAsync(p => p.Name == name);
-        }
-
-        public async Task<bool> ExistsByIdAsync(int projectId)
-        {
-            return await _context.Projects.AnyAsync(p => p.Id == projectId);
         }
     }
 }

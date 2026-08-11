@@ -10,6 +10,5 @@ namespace TaskManagement.Application.Interfaces.Repositories
         Task UpdateAsync(Project project);
         Task DeleteAsync(Project project);
         Task<bool> ExistsByNameAsync(string name);
-        Task<bool> ExistsByIdAsync(int projectId);
     }
 }
