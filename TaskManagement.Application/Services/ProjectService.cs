@@ -175,7 +175,6 @@ namespace TaskManagement.Application.Services
 
         #endregion
 
-        //Just for mapping to Project Response DTO
         #region Mapping
         private static ProjectResponse MapToResponse(Project project)
         {
